@@ -94,11 +94,24 @@ class Game extends React.Component {
         });
     }
 
-    jumpTo(step){
+    jumpTo(step) {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
-        })
+        });
+
+        let num = step + 1;
+        console.log("stepNumber:", num);
+        
+        let selected = document.querySelector('.game-info .selected');
+        let el = document.querySelector(".game-info li:nth-of-type(" + num + ")");
+
+        if(selected !== null){
+            selected.classList.remove('selected');
+            el.classList.add('selected');
+        } else {
+            el.classList.add('selected');
+        }
     }
 
     render() {
