@@ -22,23 +22,36 @@ class Board extends React.Component {
     }
   
     render() {
+        let rows = [];
+        for(var i=0; i<3; i++){
+            let cell = []
+
+            for(var j=0; j<3; j++){
+                let rel
+
+                if (i == 0) {
+                    rel = j
+                    console.log("i=0 rel:", rel)
+                    cell.push(this.renderSquare(rel))
+                }
+                if (i == 1) {
+                    rel = j + 3
+                    console.log("i=1 rel:",rel)
+                    cell.push(this.renderSquare(rel))
+                }
+                if (i == 2){
+                    rel = j + 6
+                    console.log("i=2 rel:",rel)
+                    cell.push(this.renderSquare(rel))
+                }
+            }
+            rows.push(
+                <div className="board-row" rel={i}>{cell}</div>
+            )
+        }
         return (
             <div>
-                <div className="board-row" rel="1">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row" rel="2">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row" rel="3">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {rows}
             </div>
         );
     }
@@ -101,8 +114,6 @@ class Game extends React.Component {
         });
 
         let num = step + 1;
-        console.log("stepNumber:", num);
-        
         let selected = document.querySelector('.game-info .selected');
         let el = document.querySelector(".game-info li:nth-of-type(" + num + ")");
 
