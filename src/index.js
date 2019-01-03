@@ -31,17 +31,14 @@ class Board extends React.Component {
 
                 if (i == 0) {
                     rel = j
-                    console.log("i=0 rel:", rel)
                     cell.push(this.renderSquare(rel))
                 }
                 if (i == 1) {
                     rel = j + 3
-                    console.log("i=1 rel:",rel)
                     cell.push(this.renderSquare(rel))
                 }
                 if (i == 2){
                     rel = j + 6
-                    console.log("i=2 rel:",rel)
                     cell.push(this.renderSquare(rel))
                 }
             }
@@ -68,6 +65,7 @@ class Game extends React.Component {
             colNum: 0,
             rowNum: 0,
             xIsNext: true,
+            ascOrder: true,
         }
     }
 
@@ -118,11 +116,17 @@ class Game extends React.Component {
         let el = document.querySelector(".game-info li:nth-of-type(" + num + ")");
 
         if(selected !== null){
-            selected.classList.remove('selected');
-            el.classList.add('selected');
+            selected.classList.remove('selected')
+            el.classList.add('selected')
         } else {
-            el.classList.add('selected');
+            el.classList.add('selected')
         }
+    }
+
+    toggleSort() {
+        this.setState({
+            ascOrder: !this.state.ascOrder
+        });
     }
 
     render() {
@@ -147,6 +151,12 @@ class Game extends React.Component {
         }else{
             status = 'Current player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
+
+        if(!this.state.ascOrder){
+            moves.sort(function(a,b){
+                return b.key - a.key;
+            });
+        }
         return (
             <div className="game">
                 <div className="game-board">
@@ -156,8 +166,11 @@ class Game extends React.Component {
                     />
                 </div>
                 <div className="game-info">
-                    <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <div className="status">{status}</div>
+                    <div className="order">
+                        <button onClick={ () => this.toggleSort() }>Change Order</button>
+                    </div>
+                    <ol className="list-moves">{moves}</ol>
                 </div>
             </div>
         );
