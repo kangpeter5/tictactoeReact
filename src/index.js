@@ -29,15 +29,15 @@ class Board extends React.Component {
             for(var j=0; j<3; j++){
                 let rel
 
-                if (i == 0) {
+                if (i === 0) {
                     rel = j
                     cell.push(this.renderSquare(rel))
                 }
-                if (i == 1) {
+                if (i === 1) {
                     rel = j + 3
                     cell.push(this.renderSquare(rel))
                 }
-                if (i == 2){
+                if (i === 2){
                     rel = j + 6
                     cell.push(this.renderSquare(rel))
                 }
@@ -60,47 +60,30 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                chosen: null,
             }],
             stepNumber: 0,
-            colNum: 0,
-            rowNum: 0,
             xIsNext: true,
             ascOrder: true,
         }
     }
 
     handleClick(i) {
-        const history = this.state.history.slice(0,this.state.stepNumber + 1);
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-        let rowNew = 0;
-        let colNew = 0;
 
         if(calculateWinner(squares) || squares[i]){
             return;
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
 
-        if(i >= 0 && i <= 2){
-            rowNew = 1;
-            colNew = i+1;
-        }
-        if(i >= 3 && i <= 5){
-            rowNew = 2;
-            colNew = i-2;
-        } 
-        if(i >= 6 && i <= 8){
-            rowNew = 3;
-            colNew = i-5;
-        }
-
         this.setState({
             history: history.concat([{
-                squares: squares
+                squares: squares,
+                chosen: i,
             }]),
             stepNumber: history.length,
-            colNum: colNew,
-            rowNum: rowNew,
             xIsNext: !this.state.xIsNext,
         });
     }
@@ -123,9 +106,9 @@ class Game extends React.Component {
         }
     }
 
-    toggleSort() {
+    changeOrder(){
         this.setState({
-            ascOrder: !this.state.ascOrder
+            ascOrder: !this.state.ascOrder,
         });
     }
 
@@ -135,8 +118,11 @@ class Game extends React.Component {
         const winner = calculateWinner(current.squares);
 
         const moves = history.map( (step,move) => {
+            let col = step.chosen % 3 + 1
+            let row = Math.floor(step.chosen/3) + 1
+
             const desc = move ?
-                'Go to move #' + move + " (col: "+ this.state.colNum + ", row:" + this.state.rowNum + ")" :
+                'Go to move #' + move + " (col: "+ col + ", row:" + row+ ")" :
                 'Go to game start';
             return (
                 <li key={move}>
@@ -151,7 +137,6 @@ class Game extends React.Component {
         }else{
             status = 'Current player: ' + (this.state.xIsNext ? 'X' : 'O');
         }
-
         if(!this.state.ascOrder){
             moves.sort(function(a,b){
                 return b.key - a.key;
@@ -168,7 +153,7 @@ class Game extends React.Component {
                 <div className="game-info">
                     <div className="status">{status}</div>
                     <div className="order">
-                        <button onClick={ () => this.toggleSort() }>Change Order</button>
+                        <button onClick={ () => this.changeOrder() }>Change Order</button>
                     </div>
                     <ol className="list-moves">{moves}</ol>
                 </div>
