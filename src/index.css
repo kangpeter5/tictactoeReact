@@ -26,3 +26,7 @@ code {
 .game-info .selected button{
   font-weight: bold;
 }
+
+.winner{
+  font-weight: bold; 
+}
